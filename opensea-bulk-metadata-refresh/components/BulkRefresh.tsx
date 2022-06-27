@@ -13,8 +13,8 @@ import RangeComponent from "./RangeComponent";
 import SpecificComponent from "./SpecificComponent";
 
 enum BulkRefreshType {
-  RANGE = "range",
-  SPECIFIC = "specific",
+  RANGE = "range of NFT token IDs",
+  SPECIFIC = "Specific NFT token IDs",
 }
 async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -111,7 +111,17 @@ export default function BulkRefresh() {
   }, 300);
 
   return (
-    <Grid container justifyContent="center">
+    <Grid
+      container
+      justifyContent="center"
+      style={{ textAlign: "center" }}
+      spacing={2}
+    >
+      <Grid item xs={12}>
+        <Typography variant="h5">
+          Refresh metadata for many NFTs easily on OpenSea
+        </Typography>
+      </Grid>
       <Grid item xs={12}>
         <Typography>OpenSea API key</Typography>
         <TextField
@@ -121,7 +131,7 @@ export default function BulkRefresh() {
         />
       </Grid>
       <Grid item xs={12}>
-        <Typography>Contract address</Typography>
+        <Typography>NFT contract address</Typography>
         <TextField
           value={contractAddress}
           onChange={(e) => setContractAddress(e.target.value)}
@@ -166,7 +176,11 @@ export default function BulkRefresh() {
           />
         </Grid>
       )}
-      <Button onClick={refresh}>Refresh</Button>
+      <Grid item>
+        <Button onClick={refresh} variant="contained">
+          Refresh
+        </Button>
+      </Grid>
       <Grid item xs={12}>
         <Box mt={4} />
       </Grid>

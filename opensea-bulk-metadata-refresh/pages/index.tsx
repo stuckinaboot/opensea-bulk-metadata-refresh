@@ -16,10 +16,6 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Bulk Metadata Refresh on OpenSea</h1>
-
-        <p className={styles.description}>
-          Get started by entering some token IDs
-        </p>
         <BulkRefresh />
       </main>
 
@@ -27,9 +23,15 @@ const Home: NextPage = () => {
         <Typography>
           This tool uses the OpenSea public API. Use this tool at your own
           discretion, it was created in an hr as a side project by{" "}
-          <span>
-            <a href="https://twitter.com/AspynPalatnick">Aspyn</a>
-          </span>
+          <b>
+            <a
+              href="https://twitter.com/AspynPalatnick"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Aspyn
+            </a>
+          </b>
         </Typography>
       </footer>
     </div>
