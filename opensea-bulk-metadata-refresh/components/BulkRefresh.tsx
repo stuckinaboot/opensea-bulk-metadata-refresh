@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import RangeComponent from "./RangeComponent";
 import SpecificComponent from "./SpecificComponent";
+import cogoToast from "cogo-toast";
 
 enum BulkRefreshType {
   RANGE = "range of NFT token IDs",
@@ -40,6 +41,22 @@ export default function BulkRefresh() {
     setOutputLog((curr) => {
       return curr + "\n" + strToAdd;
     });
+  }
+
+  async function validateApiKey() {
+    const res = await fetch(`api/validateApiKey?apiKey=${apiKey}`);
+    const { status } = await res.json();
+    if (status === 200) {
+      cogoToast.success(`API key is valid: ${apiKey}`);
+      return;
+    }
+    if (status === 401) {
+      cogoToast.warn(`API Key is not valid: ${apiKey}`);
+      return;
+    }
+    cogoToast.error(
+      `Status code ${status} occurred while validating API key: ${apiKey}`
+    );
   }
 
   async function refreshTokenIds(tokenIds: string[]) {
@@ -79,7 +96,12 @@ export default function BulkRefresh() {
   const refresh = debounce(async () => {
     // Clear output log
     clearOutputLog();
-
+    if (contractAddress.length === 0) {
+      // Validate api key if no contract address is inputted.
+      // Note: this is unrelated to bulk refreshing and is a separate functionality.
+      await validateApiKey();
+      return;
+    }
     if (selected === BulkRefreshType.RANGE) {
       try {
         // Validate token IDs using ints
