@@ -49,7 +49,7 @@ export default function BulkRefresh() {
     const failedToRefresh = [];
     for (const tokenId of tokenIds) {
       const res = await fetch(
-        `api/refreshTokenId?contractAddress=${contractAddress}&tokenId=${tokenId}&apiKey=${apiKey}&chain=${chain}`
+        `api/refreshTokenId?contractAddress=${contractAddress}&tokenId=${tokenId}&apiKey=${apiKey}&chain=${chain.toLowerCase()}`
       );
       const { output, status } = await res.json();
       updateOutputLog(output);
