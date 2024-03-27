@@ -12,6 +12,7 @@
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mui/material": "^5.8.6",
+    "@vercel/analytics": "^1.2.2",
     "cogo-toast": "^4.2.3",
     "next": "14.1.4",
     "node-fetch": "^3.2.6",
