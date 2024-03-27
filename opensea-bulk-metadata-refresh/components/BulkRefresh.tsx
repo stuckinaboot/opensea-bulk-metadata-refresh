@@ -30,6 +30,7 @@ export default function BulkRefresh() {
   // This is the text in the specific token IDs text box
   const [specificTokenIds, setSpecificTokenIds] = useState("");
   const [contractAddress, setContractAddress] = useState("");
+  const [chain, setChain] = useState("");
   const [outputLog, setOutputLog] = useState("");
   const [apiKey, setApiKey] = useState("");
 
@@ -43,28 +44,12 @@ export default function BulkRefresh() {
     });
   }
 
-  async function validateApiKey() {
-    const res = await fetch(`api/validateApiKey?apiKey=${apiKey}`);
-    const { status } = await res.json();
-    if (status === 200) {
-      cogoToast.success(`API key is valid: ${apiKey}`);
-      return;
-    }
-    if (status === 401) {
-      cogoToast.warn(`API Key is not valid: ${apiKey}`);
-      return;
-    }
-    cogoToast.error(
-      `Status code ${status} occurred while validating API key: ${apiKey}`
-    );
-  }
-
   async function refreshTokenIds(tokenIds: string[]) {
     let successfullyRefreshed = 0;
     const failedToRefresh = [];
     for (const tokenId of tokenIds) {
       const res = await fetch(
-        `api/refreshTokenId?contractAddress=${contractAddress}&tokenId=${tokenId}&apiKey=${apiKey}`
+        `api/refreshTokenId?contractAddress=${contractAddress}&tokenId=${tokenId}&apiKey=${apiKey}&chain=${chain}`
       );
       const { output, status } = await res.json();
       updateOutputLog(output);
@@ -87,21 +72,15 @@ export default function BulkRefresh() {
     const finalLog =
       `\nSuccessfully submitted ${successfullyRefreshed} tokens for metadata refresh` +
       "\n" +
-      (failedToRefresh.length > 0)
+      ((failedToRefresh.length > 0)
         ? `Failed to submit ${failedToRefresh.length} tokens for metadata refresh. Here are their token IDs: ${failedToRefresh}`
-        : "No tokens failed to refresh";
+        : "No tokens failed to refresh");
     updateOutputLog(finalLog);
   }
 
   const refresh = debounce(async () => {
     // Clear output log
     clearOutputLog();
-    if (contractAddress.length === 0) {
-      // Validate api key if no contract address is inputted.
-      // Note: this is unrelated to bulk refreshing and is a separate functionality.
-      await validateApiKey();
-      return;
-    }
     if (selected === BulkRefreshType.RANGE) {
       try {
         // Validate token IDs using ints
@@ -157,6 +136,14 @@ export default function BulkRefresh() {
         <TextField
           value={contractAddress}
           onChange={(e) => setContractAddress(e.target.value)}
+          fullWidth
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Typography>Chain (ex. ethereum)</Typography>
+        <TextField
+          value={chain}
+          onChange={(e) => setChain(e.target.value)}
           fullWidth
         />
       </Grid>
