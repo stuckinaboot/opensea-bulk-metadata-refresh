@@ -1,13 +1,15 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { Typography } from "@mui/material";
 import BulkRefresh from "../components/BulkRefresh";
+import { Analytics } from "@vercel/analytics/react"
 
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
+      <Analytics />
+
       <Head>
         <title>NFT bulk metadata refresh</title>
         <meta name="description" content="Bulk metadata refresh" />

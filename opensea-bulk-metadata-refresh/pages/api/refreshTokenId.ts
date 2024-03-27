@@ -11,6 +11,7 @@ type BulkRefreshParams = {
   contractAddress: string;
   tokenId: string;
   apiKey: string;
+  chain: string;
 };
 
 // Return output string
@@ -18,10 +19,14 @@ async function bulkRefresh({
   tokenId,
   apiKey,
   contractAddress,
+  chain,
 }: BulkRefreshParams): Promise<Data> {
-  const url = `https://api.opensea.io/api/v1/asset/${contractAddress}/${tokenId}/?force_update=true`;
+  const url = `https://api.opensea.io/api/v2/chain/${chain}/contract/${contractAddress}/nfts/${tokenId}/refresh`
   const res = await fetch(url, {
-    headers: { "X-API-KEY": apiKey },
+    method: 'POST', // Specify the method as POST
+    headers: {
+      "X-API-KEY": apiKey,
+    },
   });
   const output =
     res.status === 200
@@ -37,6 +42,7 @@ export default async function handler(
   const tokenId = req.query.tokenId as string;
   const apiKey = req.query.apiKey as string;
   const contractAddress = req.query.contractAddress as string;
-  const results = await bulkRefresh({ tokenId, apiKey, contractAddress });
+  const chain = req.query.chain as string;
+  const results = await bulkRefresh({ tokenId, apiKey, contractAddress, chain });
   res.status(200).json(results);
 }
